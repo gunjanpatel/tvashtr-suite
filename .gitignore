@@ -1,0 +1,41 @@
+# Dependencies
+node_modules
+
+# Nuxt build output
+.output
+.nuxt
+.nitro
+.cache
+dist
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment — NEVER commit real secrets
+.env
+.env.local
+.env.*.local
+# Allow the example file (has no real values)
+!.env.example
+
+# Local SQLite DB (dev orders)
+.data
+
+# Windows metadata artifacts
+*.Identifier
+*Zone.Identifier
+.idea
+.DS_Store
+
+# Tests
+playwright-report
+playwright-video
+test-results
+report.json
+# Ignore heavy visual snapshots but allow lightweight HTML/txt snapshots
+tests/e2e/snapshots/**/*.png
+tests/e2e/snapshots/**/*.jpg
+tests/e2e/snapshots/**/*.jpeg
+
+.wrangler/

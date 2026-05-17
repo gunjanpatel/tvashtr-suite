@@ -1,0 +1,14 @@
+name = "store-template-worker"
+main = "worker.ts"
+compatibility_date = "2024-03-20"
+compatibility_flags = ["nodejs_compat"]
+
+# Node.js compatibility required for certain crypto/buffer operations
+node_compat = true
+
+[build]
+command = "npm run build"
+cwd = "../../packages/tvashtr-core" # This depends on where your worker logic is stored
+
+# [vars]
+# ALLOWED_ORIGIN = "https://store-template.com"

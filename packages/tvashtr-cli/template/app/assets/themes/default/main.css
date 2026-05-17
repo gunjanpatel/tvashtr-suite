@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+@plugin "@tailwindcss/typography";
+
+/* Ensure Tailwind v4 scans the layer packages */
+@source "../../../../../packages/tvashtr-ui/app/**/*.vue";
+@source "../../../../../packages/tvashtr-ui/app/**/*.ts";
+@source "../../../../../packages/tvashtr-checkout/app/**/*.vue";
+
+@theme {
+  /* Primary Blue */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-500: #3b82f6; 
+  --color-brand-600: #2563eb;
+  --color-brand-900: #1e3a8a;
+
+  /* Teal Accent */
+  --color-accent-400: #2dd4bf;
+}
+
+:root {
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-muted: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+}
+
+.dark {
+  --bg-page: #020617;
+  --bg-surface: #0f172a;
+  --bg-muted: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --border: #334155;
+}
+
+html, body {
+  font-family: Inter, system-ui, sans-serif;
+}
+h1, h2, h3 {
+  font-family: 'DM Serif Display', Georgia, serif;
+}

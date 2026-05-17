@@ -1,0 +1,11 @@
+{
+  "name": "tvashtr-suite",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "npx -y patch-package"
+  }
+}
