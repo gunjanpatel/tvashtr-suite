@@ -1,5 +1,5 @@
 {
-  "name": "tvashtr-cli",
+  "name": "@tvashtr/cli",
   "version": "1.0.1",
   "type": "module",
   "publishConfig": {
