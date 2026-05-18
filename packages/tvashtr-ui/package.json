@@ -1,6 +1,6 @@
 {
   "name": "@tvashtr/ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module", 
   "main": "./nuxt.config.ts",
   "exports": {
@@ -13,5 +13,10 @@
     "@tvashtr/checkout": "*",
     "@tvashtr/core": "*",
     "@tvashtr/google-sheets": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gunjanpatel/tvashtr-suite.git",
+    "directory": "packages/tvashtr-ui"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@tvashtr/checkout",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -13,5 +13,10 @@
   "dependencies": {
     "@tvashtr/core": "*",
     "@tvashtr/notifications": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gunjanpatel/tvashtr-suite.git",
+    "directory": "packages/tvashtr-checkout"
   }
 }
