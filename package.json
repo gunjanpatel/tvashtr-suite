@@ -1,6 +1,5 @@
 {
   "name": "tvashtr-suite",
-  "private": true,
   "type": "module",
   "workspaces": [
     "packages/*"
