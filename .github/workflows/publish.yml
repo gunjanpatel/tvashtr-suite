@@ -31,4 +31,22 @@ jobs:
         run: npm run build --workspaces --if-present
 
       - name: Publish Changed Packages Only
-        run: npm publish --workspaces --provenance
+        run: |
+          # Loop through each package directory inside workspaces
+          for dir in packages/*; do
+            if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
+              # Get package name and version from package.json
+              NAME=$(node -p "require('./$dir/package.json').name")
+              VERSION=$(node -p "require('./$dir/package.json').version")
+              
+              echo "Checking $NAME@$VERSION..."
+              
+              # Check if this exact version is already live on npm
+              if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+                echo "--> $NAME@$VERSION is already published. Skipping."
+              else
+                echo "--> New version detected! Publishing $NAME@$VERSION..."
+                npm publish "$dir" --provenance
+              fi
+            fi
+          done
