@@ -46,7 +46,7 @@ jobs:
                 echo "--> $NAME@$VERSION is already published. Skipping."
               else
                 echo "--> New version detected! Publishing $NAME@$VERSION..."
-                npm publish "$dir" --provenance
+                npm publish "./$dir" --provenance
               fi
             fi
           done
