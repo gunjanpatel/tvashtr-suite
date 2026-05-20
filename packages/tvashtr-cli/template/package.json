@@ -12,6 +12,8 @@
   "dependencies": {
     "@nuxt/content": "^3.13.0",
     "@nuxt/ui": "^3.0.0",
+    "@nuxtjs/i18n": "^9.2.0",
+    "@tailwindcss/typography": "^0.5.15",
     "@tvashtr/checkout": "*",
     "@tvashtr/core": "*",
     "@tvashtr/google-sheets": "*",

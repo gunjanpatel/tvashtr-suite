@@ -98,10 +98,10 @@ if (!storeName) {
   }))
 }
 
-const targetDir = path.resolve(process.cwd(), 'apps', storeName)
+const targetDir = path.resolve(process.cwd(), storeName)
 
 if (fs.existsSync(targetDir)) {
-  bail(`Directory apps/${storeName} already exists. Choose a different name.`)
+  bail(`Directory ${storeName} already exists. Choose a different name or path.`)
 }
 
 // ── Step 2: Branding ──────────────────────────────────────────────────────
@@ -247,13 +247,32 @@ if (fs.existsSync(files.envEx)) {
   fs.writeFileSync(files.env, env)
 }
 
-// 4. Write CSS brand colour into the theme file
+// 4. Write CSS brand colour and Tailwind sources into the theme file
 const themeFile = path.join(targetDir, 'app', 'assets', 'themes', 'default', 'main.css')
 if (fs.existsSync(themeFile)) {
   let css = fs.readFileSync(themeFile, 'utf-8')
   css = css.replaceAll('__BRAND_COLOR__', brandColor)
   css = css.replaceAll('__BRAND_COLOR_ACCENT__', brandColorAccent)
+  
+  // If we are scaffolding inside the cloned tvashtr-suite monorepo apps/ dir, point to local packages.
+  // Otherwise, point to node_modules for standalone usage.
+  const isMonorepo = fs.existsSync(path.resolve(targetDir, '..', '..', 'packages', 'tvashtr-ui'))
+  
+  if (isMonorepo) {
+    css = css.replaceAll('__TAILWIND_SOURCE_UI__', '../../../../../packages/tvashtr-ui/app/**/*.{vue,ts}')
+    css = css.replaceAll('__TAILWIND_SOURCE_CHECKOUT__', '../../../../../packages/tvashtr-checkout/app/**/*.vue')
+  } else {
+    css = css.replaceAll('__TAILWIND_SOURCE_UI__', '../../../../node_modules/@tvashtr/ui/app/**/*.{vue,ts}')
+    css = css.replaceAll('__TAILWIND_SOURCE_CHECKOUT__', '../../../../node_modules/@tvashtr/checkout/app/**/*.vue')
+  }
+  
   fs.writeFileSync(themeFile, css)
+}
+
+// 5. Rename gitignore
+const gitignoreSrc = path.join(targetDir, 'gitignore')
+if (fs.existsSync(gitignoreSrc)) {
+  fs.renameSync(gitignoreSrc, path.join(targetDir, '.gitignore'))
 }
 
 s.stop(c.green('Store scaffolded!'))
@@ -265,14 +284,16 @@ ${c.bold('📋  What to do next:')}
 
   ${c.cyan('1.')} ${c.bold('Set up your Google Sheet')} (see README → Step 1)
      Create a sheet with the required columns, share as Viewer, then:
-     ${c.dim(`echo "NUXT_PUBLIC_SHEET_ID=your_id" >> apps/${storeName}/.env`)}
+     ${c.dim(`echo "NUXT_PUBLIC_SHEET_ID=your_id" >> ${storeName}/.env`)}
 
   ${c.cyan('2.')} ${c.bold('Start the dev server')}
-     ${c.dim(`npm run dev -w ${storeName}`)}
+     ${c.dim(`cd ${storeName}`)}
+     ${c.dim('npm install')}
+     ${c.dim('npm run dev')}
      ${c.dim('→ http://localhost:3000')}
 
   ${c.cyan('3.')} ${c.bold('Deploy your Cloudflare Worker + D1 database')}
-     ${c.dim(`cd apps/${storeName}/cloudflare`)}
+     ${c.dim(`cd ${storeName}/cloudflare`)}
      ${c.dim('npx wrangler login')}
      ${c.dim(`npx wrangler d1 create ${storeName}-db`)}
      ${c.dim(`npx wrangler d1 execute ${storeName}-db --remote --file=schema.sql`)}
@@ -285,13 +306,13 @@ ${c.bold('📋  What to do next:')}
      ${c.dim('npx wrangler secret put BREVO_API_KEY')}
 
   ${c.cyan('5.')} ${c.bold('Deploy to Cloudflare Pages')}
-     Build command:  ${c.dim(`npm run build -w ${storeName}`)}
-     Output dir:     ${c.dim(`apps/${storeName}/.output/public`)}
+     Build command:  ${c.dim(`npm run build`)}
+     Output dir:     ${c.dim(`.output/public`)}
      Root dir:       ${c.dim('/')}
 
 ${c.dim('Full guide: https://github.com/gunjanpatel/tvashtr-suite#-full-deployment-guide')}
 `
 
-note(checklist, `✅  apps/${storeName} is ready`)
+note(checklist, `✅  ${storeName} is ready`)
 
 outro(c.green(`Happy selling! 🛒`))

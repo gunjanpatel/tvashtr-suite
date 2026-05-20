@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "recipes": "Recipes",
+    "blog": "Guides",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "common": {
+    "addToCart": "Add to Cart",
+    "sendEnquiry": "Send Enquiry",
+    "checkout": "Checkout",
+    "freeDelivery": "Free neighborhood delivery on orders over",
+    "freshlyGround": "Freshly prepared, delivered to your door",
+    "language": "Language"
+  },
+  "product": {
+    "discontinued": "Discontinued",
+    "added": "Added",
+    "add": "Add",
+    "addToCart": "Add to Cart",
+    "notFound": "Product not found",
+    "browseAll": "Browse all products",
+    "size": "Variant",
+    "quantity": "Quantity",
+    "addedFeedback": "Added to cart!"
+  },
+  "footer": {
+    "brandDesc": "Small-batch, premium quality products — made on demand for our community. Each order is prepared individually to ensure freshness and great taste.",
+    "freshTitle": "Prepared on Order",
+    "freshDesc": "Every batch is prepared only after you request it, guaranteeing maximum quality. Choose your items, quantity, and any custom options you need.",
+    "quickLinks": "Quick Links",
+    "rights": "All rights reserved."
+  },
+  "enquire": {
+    "title": "Send Enquiry",
+    "subtitle": "Get in touch about this product",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "message": "Message",
+    "submit": "Send Enquiry",
+    "submitting": "Sending...",
+    "successTitle": "Enquiry Sent!",
+    "successDesc": "Thank you for your interest. We will get back to you shortly.",
+    "productInfo": "Product Information",
+    "back": "Browse all products"
+  },
+  "blog": {
+    "title": "Guides",
+    "subtitle": "News, stories, and deep dives into our artisanal process.",
+    "noPosts": "No posts yet",
+    "comingSoon": "We're currently writing up some new content. Check back soon!",
+    "goHome": "Go Home",
+    "readMore": "Read",
+    "backToBlog": "Back to Guides"
+  }
+}
