@@ -1,5 +1,5 @@
 {
-  "name": "store-template",
+  "name": "__STORE_SLUG__",
   "private": true,
   "type": "module",
   "scripts": {

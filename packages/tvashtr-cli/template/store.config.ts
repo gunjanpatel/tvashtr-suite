@@ -1,30 +1,29 @@
-export const siteName = 'My New Store'
-export const siteTagline = 'The best products in the world'
-export const logoLabel = 'STORE'
-export const logoText = 'My New Store'
+import type { BrandConfig } from '@tvashtr/notifications'
 
-export const brandConfig = {
-  name: 'My New Store',
-  colors: {
-    primary: '#3b82f6', // Match this to your CSS variable
-  },
-  social: {
-    instagram: 'https://instagram.com/',
-    facebook: 'https://facebook.com/',
-  },
+export const siteName = '__SITE_NAME__'
+export const siteTagline = '__SITE_TAGLINE__'
+export const logoLabel = '__LOGO_LABEL__'
+export const logoText = '__LOGO_TEXT__'
+
+export const brandConfig: BrandConfig = {
+  name: '__SITE_NAME__',
+  color: '__BRAND_COLOR__',
+  colorLight: '__BRAND_COLOR_LIGHT__',
+  colorAccent: '__BRAND_COLOR_ACCENT__',
 }
 
 export const checkoutPhoneConfig = {
-  prefix: '+45',
-  flag: '🇩🇰',
-  digits: 8,
-  hint: '8 digits',
-  placeholder: '12 34 56 78',
-  maxLength: 11,
+  prefix: '__PHONE_PREFIX__',
+  flag: '__PHONE_FLAG__',
+  digits: __PHONE_DIGITS__,
+  hint: '__PHONE_HINT__',
+  placeholder: '__PHONE_PLACEHOLDER__',
+  maxLength: __PHONE_MAX_LENGTH__,
 }
 
 export const navLinks = [
-  { label: 'Products', to: '/products' },
-  { label: 'About', to: '/about' },
-  { label: 'Contact', to: '/contact' },
+  { key: 'nav.home', to: '/' },
+  { key: 'nav.products', to: '/products' },
+  { key: 'nav.about', to: '/about' },
+  { key: 'nav.contact', to: '/contact' },
 ]

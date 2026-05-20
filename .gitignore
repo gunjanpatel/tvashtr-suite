@@ -39,3 +39,4 @@ tests/e2e/snapshots/**/*.jpg
 tests/e2e/snapshots/**/*.jpeg
 
 .wrangler/
+apps

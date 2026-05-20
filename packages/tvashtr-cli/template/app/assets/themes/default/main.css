@@ -8,15 +8,15 @@
 @source "../../../../../packages/tvashtr-checkout/app/**/*.vue";
 
 @theme {
-  /* Primary Blue */
+  /* Brand Scale */
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6; 
-  --color-brand-600: #2563eb;
+  --color-brand-500: __BRAND_COLOR__; 
+  --color-brand-600: __BRAND_COLOR_ACCENT__;
   --color-brand-900: #1e3a8a;
 
-  /* Teal Accent */
-  --color-accent-400: #2dd4bf;
+  /* Accent */
+  --color-accent-400: __BRAND_COLOR_ACCENT__;
 }
 
 :root {
