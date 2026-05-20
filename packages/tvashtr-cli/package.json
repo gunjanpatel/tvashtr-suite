@@ -6,7 +6,7 @@
     "access": "public"
   },
   "bin": {
-    "tvashtr": "./bin/tvashtr.js"
+    "tvashtr": "bin/tvashtr.js"
   },
   "repository": {
     "type": "git",
