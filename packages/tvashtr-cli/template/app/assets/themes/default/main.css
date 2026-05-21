@@ -3,20 +3,19 @@
 @plugin "@tailwindcss/typography";
 
 /* Ensure Tailwind v4 scans the layer packages */
-@source "../../../../../packages/tvashtr-ui/app/**/*.vue";
-@source "../../../../../packages/tvashtr-ui/app/**/*.ts";
-@source "../../../../../packages/tvashtr-checkout/app/**/*.vue";
+@source "__TAILWIND_SOURCE_UI__";
+@source "__TAILWIND_SOURCE_CHECKOUT__";
 
 @theme {
-  /* Primary Blue */
+  /* Brand Scale */
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6; 
-  --color-brand-600: #2563eb;
+  --color-brand-500: __BRAND_COLOR__; 
+  --color-brand-600: __BRAND_COLOR_ACCENT__;
   --color-brand-900: #1e3a8a;
 
-  /* Teal Accent */
-  --color-accent-400: #2dd4bf;
+  /* Accent */
+  --color-accent-400: __BRAND_COLOR_ACCENT__;
 }
 
 :root {
