@@ -22,7 +22,7 @@ Every store built on this suite runs at **$0/month** by leveraging free tiers:
 | Cloudflare D1 | 5 GB storage, 25M row reads/day |
 | Google Sheets | Unlimited (used as headless CMS) |
 
-**See it in production:** [patel-flours](https://github.com/gunjanpatel/patel-flours) — a real organic flour store built entirely on this framework.
+**See it in production:** [patel-flours](https://shop.gunjanpatel.info) — a real organic flour store built entirely on this framework.
 
 ---
 
@@ -30,25 +30,25 @@ Every store built on this suite runs at **$0/month** by leveraging free tiers:
 
 ```
                 ┌─────────────────────────────────┐
-                │       Google Sheets CMS          │
-                │  (Products, Recipes, Blog posts) │
+                │       Google Sheets CMS         │
+                │  (Products, Recipes, Blog posts)│
                 └────────────────┬────────────────┘
-                                 │ gviz API (real-time)
+                        gviz API (real-time)
                                  ▼
          ┌────────────────────────────────────────────────┐
          │          Nuxt 4 SPA — Cloudflare Pages         │
          │   @tvashtr/ui · @tvashtr/core · store theme    │
          └───────────────────────┬────────────────────────┘
-                                 │ HTTPS POST (Turnstile-protected)
+                  HTTPS POST (Turnstile-protected)
                                  ▼
          ┌────────────────────────────────────────────────┐
-         │       Cloudflare Worker (Edge API)              │
-         │   Rate limiting · Bot protection · Validation   │
+         │       Cloudflare Worker (Edge API)             │
+         │   Rate limiting · Bot protection · Validation  │
          └──────────┬───────────────────┬─────────────────┘
                     │                   │
          ┌──────────▼──────┐   ┌────────▼──────────────┐
-         │  Cloudflare D1  │   │  Notifications         │
-         │  (Orders DB)    │   │  Telegram + Brevo SMTP │
+         │  Cloudflare D1  │   │  Notifications        │
+         │  (Orders DB)    │   │  Telegram + Brevo SMTP│
          └─────────────────┘   └───────────────────────┘
 ```
 
