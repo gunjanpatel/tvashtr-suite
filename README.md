@@ -22,7 +22,7 @@ Every store built on this suite runs at **$0/month** by leveraging free tiers:
 | Cloudflare D1 | 5 GB storage, 25M row reads/day |
 | Google Sheets | Unlimited (used as headless CMS) |
 
-**See it in production:** [patel-flours](https://shop.gunjanpatel.info) — a real organic flour store built entirely on this framework.
+**See it in production:** [patel-flour](https://flour.dk) — a real organic flour store built entirely on this framework.
 
 ---
 
@@ -57,7 +57,7 @@ Every store built on this suite runs at **$0/month** by leveraging free tiers:
 ```
 tvashtr-suite/
 ├── apps/
-│   ├── patel-flours/       ← Store: brand, theme, locale overrides
+│   ├── patel-flour/       ← Store: brand, theme, locale overrides
 │   └── my-store/           ← Your new store (created by CLI)
 │
 └── packages/

@@ -2,7 +2,7 @@
  * useGeoRestriction
  * Generic IP-based country gate.
  * The allowed country is read from runtimeConfig.public.allowedCountry.
- * Set NUXT_PUBLIC_ALLOWED_COUNTRY=DK  → Denmark-only (patel-flours default)
+ * Set NUXT_PUBLIC_ALLOWED_COUNTRY=DK  → Denmark-only (patel-flour default)
  * Set NUXT_PUBLIC_ALLOWED_COUNTRY=*   → allow all (service stores like OmCare)
  * Omit the env var                    → defaults to '*' (allow all)
  *
