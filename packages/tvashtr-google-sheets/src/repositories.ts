@@ -1,6 +1,56 @@
 import type { ProductRepository, RecipeRepository, Product, Recipe } from '@tvashtr/core'
-import { fetchGoogleSheetRows } from './googleSheets'
+import { fetchGoogleSheetRows, fetchGoogleSheetRowsWithHeaders } from './googleSheets'
 import { resolveOptimizedImage } from './imageResolver'
+
+/**
+ * Generic product-attributes repository.
+ *
+ * Sheet layout expected:
+ *   Column A (header: "sku") — product SKU, the lookup key.
+ *   Columns B…N               — any attribute names as headers (e.g. "Calories",
+ *                               "Protein", "Lumen", "Weight" …).
+ *
+ * Rows with an empty SKU cell are skipped.
+ * Attribute cells that are empty or whitespace-only are omitted from the result,
+ * so callers never see blank entries.
+ *
+ * Returns: Record<sku, Record<attributeName, string>>
+ * The attribute names preserve the original header casing from the sheet.
+ */
+export class GoogleSheetsProductAttributesRepository {
+  constructor(private sheetId: string) {}
+
+  async getAll(): Promise<Record<string, Record<string, string>>> {
+    if (!this.sheetId || this.sheetId === 'YOUR_SHEET_ID_HERE' || this.sheetId === 'MOCK') {
+      return {}
+    }
+
+    const { rows, headers } = await fetchGoogleSheetRowsWithHeaders(this.sheetId)
+    console.log('[productAttributes] headers:', headers)
+    console.log('[productAttributes] first row sku:', rows[0]?.$get('sku'))
+
+    const attrHeaders = headers.filter((h) => h.toLowerCase() !== 'sku')
+
+    const result: Record<string, Record<string, string>> = {}
+
+    for (const row of rows) {
+      const sku = row.$get('sku')
+      if (!sku) continue
+
+      const attrs: Record<string, string> = {}
+      for (const header of attrHeaders) {
+        const value = row.$get(header)
+        if (value) attrs[header] = value
+      }
+
+      if (Object.keys(attrs).length > 0) {
+        result[sku] = attrs
+      }
+    }
+
+    return result
+  }
+}
 
 function parseVariantPrices(raw: string): Record<string, number> {
   if (!raw) return {}

@@ -43,6 +43,16 @@ const firstRowSku = rows[0].$get('sku') // Get string representation
 const isActive = rows[0].$getRaw('active') // Get raw boolean/number representation
 ```
 
+### `fetchGoogleSheetRowsWithHeaders(sheetId)`
+Same as `fetchGoogleSheetRows` but also returns the original column header labels — used when column names are dynamic and not known at compile time (e.g. the product attributes sheet).
+
+```typescript
+import { fetchGoogleSheetRowsWithHeaders } from '@tvashtr/google-sheets'
+
+const { rows, headers } = await fetchGoogleSheetRowsWithHeaders('YOUR_SHEET_ID')
+// headers: ['sku', 'Calories', 'Protein', 'Fat', ...]
+```
+
 ### 2. Catalog Repositories (`repositories.ts`)
 Implements `@tvashtr/core` repository contracts to map spreadsheet rows directly to fully-typed domain models:
 
@@ -62,6 +72,17 @@ import { GoogleSheetsRecipeRepository } from '@tvashtr/google-sheets'
 
 const recipeRepo = new GoogleSheetsRecipeRepository(sheetId, optimizedImagesSet)
 const recipes = await recipeRepo.getAll()
+```
+
+#### `GoogleSheetsProductAttributesRepository`
+Fetches a generic per-product attributes sheet and returns a map of SKU → attribute name → value. Column names become attribute labels automatically — fully dynamic, no schema needed. Empty cells are silently ignored.
+
+```typescript
+import { GoogleSheetsProductAttributesRepository } from '@tvashtr/google-sheets'
+
+const repo = new GoogleSheetsProductAttributesRepository(sheetId)
+const attributes = await repo.getAll()
+// { 'organic-wheat-flour': { Calories: '340 kcal', Protein: '13 g', ... } }
 ```
 
 ### 3. Image Resolver (`imageResolver.ts`)
@@ -105,6 +126,12 @@ To successfully map rows to models, configure your Google Sheet tabs with these 
 * `recipe_products` — Associated product items to buy (e.g. `FLOUR-001:1kg:1, YEAST-002::2`).
 * `active` — `TRUE` or `FALSE`.
 * `is_popular` — `TRUE` or `FALSE`.
+
+### 🧬 Product Attributes Tab
+* `sku` — Must match the SKU in the products sheet exactly. Required in column A.
+* Any additional columns — become attribute labels as-is (casing preserved). Examples: `Calories`, `Protein`, `Lumen`, `Weight`, `Service Includes`.
+
+Empty cells are automatically skipped. SKUs with no matching row are silently ignored. Column order does not matter beyond `sku` being present.
 
 ---
 
