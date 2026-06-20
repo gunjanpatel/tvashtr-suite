@@ -120,13 +120,13 @@ const siteTagline = checkCancel(await text({
 const logoLabel = checkCancel(await text({
   message: 'Logo — bold first word:',
   placeholder: siteTitle.split(' ')[0] || 'MY',
-  hint: 'e.g. "Patel" in "Patel Flours"',
+  hint: 'e.g. "Patel" in "Patel Flour"',
 }))
 
 const logoText = checkCancel(await text({
   message: 'Logo — remaining text:',
   placeholder: siteTitle.split(' ').slice(1).join(' ') || 'Store',
-  hint: 'e.g. "Flours" in "Patel Flours"',
+  hint: 'e.g. "Flours" in "Patel Flour"',
 }))
 
 // ── Step 3: Brand colour ──────────────────────────────────────────────────
