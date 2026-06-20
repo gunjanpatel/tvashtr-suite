@@ -71,5 +71,5 @@ export async function fetchGoogleSheetRows(sheetId: string): Promise<GoogleSheet
 
 /** Returns rows + original header labels — for dynamic column discovery. */
 export async function fetchGoogleSheetRowsWithHeaders(sheetId: string): Promise<GoogleSheetTable> {
-  return fetchGoogleSheetTable(sheetId)
+  return await fetchGoogleSheetTable(sheetId)
 }
