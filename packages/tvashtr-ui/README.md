@@ -55,6 +55,9 @@ All UI components are built using **Nuxt UI** and **TailwindCSS v4**, utilizing 
 ### 🛡️ Bot Security
 - **`TurnstileWidget.vue`**: Standard wrapper component that mounts Cloudflare Turnstile's captcha client, emitting verification tokens securely upon human checks.
 
+### 🧬 Product Attributes
+- **`ProductAttributesTable.vue`**: Generic attribute display component. Accepts `title`, `subtitle`, and `attributes` props. Renders nothing when attributes is empty — zero DOM footprint. Suitable for any store type: Nutrition for food stores, Specifications for electronics, Features for service businesses. Stores can extend this with their own styled variant (e.g. `NutritionLabelA.vue`) using the same props.
+
 ---
 
 ## 🧪 Reactive Composables
@@ -89,6 +92,15 @@ Prevents shipping submissions outside delivery perimeters (e.g., restricting pos
 const { isRestricted, checkPostcode } = useGeoRestriction()
 ```
 
+### 🧬 `useProductAttributes(sku)`
+Returns the attribute map for a given product SKU, sourced from the product attributes sheet loaded by `productAttributes.client.ts`. Returns an empty object when the sheet is not configured or the SKU has no row — the component self-hides automatically.
+
+```typescript
+const { attributes, hasAttributes } = useProductAttributes(sku)
+// attributes: { Calories: '340 kcal', Protein: '13 g', ... }
+// hasAttributes: true
+```
+
 ---
 
 ## 🏗️ Design System & Theming
@@ -114,3 +126,4 @@ The UI layer automatically boots plugins to hydrate store data from sheet endpoi
 1. **`products.client.ts`**: Populates products state in the application during early initialization.
 2. **`recipes.client.ts`**: Safely loads and parses sheet recipe lists.
 3. **`delivery.client.ts`**: Validates initial cookie states for addresses and postcodes.
+4. **`productAttributes.client.ts`**: Fetches the product attributes sheet if `NUXT_PUBLIC_PRODUCT_ATTRIBUTES_SHEET_ID` is configured. Silently provides an empty map if not — opt-in with zero noise for stores that don't use it.

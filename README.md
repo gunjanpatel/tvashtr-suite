@@ -1,7 +1,12 @@
 # Tvashtr Suite
 
-> **Tvashtr** — The divine craftsman of Hindu beliefs. A modular, zero-cost framework for building production-ready multi-tenant e-commerce storefronts.
+> [**Tvashtr**](https://www.npmjs.com/org/tvashtr) — The divine craftsman of Hindu beliefs. A modular, zero-cost framework for building production-ready multi-tenant e-commerce storefronts.
 
+[![npm version](https://img.shields.io/npm/v/@tvashtr/checkout?label=%40tvashtr%2Fcheckout&color=blue)](https://www.npmjs.com/package/@tvashtr/checkout)
+[![npm version](https://img.shields.io/npm/v/@tvashtr/core?label=%40tvashtr%2Fcore&color=purple)](https://www.npmjs.com/package/@tvashtr/core)
+[![npm version](https://img.shields.io/npm/v/@tvashtr/google-sheets?label=%40tvashtr%2Fgoogle-sheets&color=gray)](https://www.npmjs.com/package/@tvashtr/google-sheets)
+[![npm version](https://img.shields.io/npm/v/@tvashtr/notifications?label=%40tvashtr%2Fnotifications&color=red)](https://www.npmjs.com/package/@tvashtr/notifications)
+[![npm version](https://img.shields.io/npm/v/@tvashtr/ui?label=%40tvashtr%2Fui&color=pink)](https://www.npmjs.com/package/@tvashtr/ui)
 [![npm version](https://img.shields.io/npm/v/@tvashtr/cli?label=%40tvashtr%2Fcli&color=green)](https://www.npmjs.com/package/@tvashtr/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Cloudflare Pages](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Pages-orange)](https://pages.cloudflare.com)
@@ -84,6 +89,7 @@ tvashtr-suite/
 | 📱 **Instant Notifications** | Telegram + Brevo email on every order and enquiry |
 | 🛒 **Persistent Cart** | `localStorage`-backed with variant pricing |
 | 💳 **Variant Pricing** | Different prices per size/weight/flavour |
+| 🧬 **Product Attributes** | Generic per-product data table driven by Google Sheets — Nutrition, Specs, Features, or any custom labels |
 | 📦 **Cash on Delivery** | Full COD payment flow |
 | 🔒 **Zero Secrets in Repo** | All sensitive keys stored as Cloudflare Worker secrets |
 | 🇩🇰 **Geo-restriction** | Optionally hide checkout for visitors outside your target country |
@@ -207,6 +213,41 @@ Enable with `NUXT_PUBLIC_ENABLE_RECIPES=true`. Create a second sheet with these 
 ```env
 NUXT_PUBLIC_RECIPE_SHEET_ID=your_recipe_sheet_id
 NUXT_PUBLIC_ENABLE_RECIPES=true
+```
+
+### Step 2b: Google Sheets — Product Attributes (Optional)
+
+A generic per-product data table. Patel Flour uses it for Nutrition Information. A lighting store might use it for electrical specs. A service company for service inclusions. The column names become the attribute labels — fully dynamic.
+
+**Sheet layout:**
+
+| `sku` | Calories | Protein | Carbohydrates | Fat | Fibre |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| organic-wheat-flour | 340 kcal | 13 g | 62 g | 2 g | 11 g |
+
+- Column A header must be `sku` — this is the lookup key matched against the product SKU
+- Columns B onwards — any label you want, they become the attribute names as-is
+- Empty cells are automatically ignored — only populated values are shown
+- SKUs with no row in this sheet simply show no section on their product page
+- Add as many columns as needed — the UI adapts automatically
+
+```env
+NUXT_PUBLIC_PRODUCT_ATTRIBUTES_SHEET_ID=your_sheet_id_here
+```
+
+**In your store's product page**, use the `useProductAttributes(sku)` composable and the generic `ProductAttributesTable` component from `@tvashtr/ui`, or create a store-specific styled component (e.g. `NutritionLabelA.vue`) that accepts the same props:
+
+```vue
+<ProductAttributesTable
+  v-if="product"
+  title="Nutrition Information"
+  subtitle="Typical values per 100 g"
+  :attributes="nutritionAttributes"
+/>
+```
+
+```ts
+const { attributes: nutritionAttributes } = useProductAttributes(sku)
 ```
 
 ---
@@ -443,6 +484,7 @@ Toggle features by setting these in your `apps/my-store/.env`. No code changes n
 | `NUXT_PUBLIC_SHEET_ID` | *(required)* | Product catalogue Google Sheet ID |
 | `NUXT_PUBLIC_DELIVERY_SHEET_ID` | — | Delivery options Google Sheet ID |
 | `NUXT_PUBLIC_RECIPE_SHEET_ID` | — | Recipes Google Sheet ID |
+| `NUXT_PUBLIC_PRODUCT_ATTRIBUTES_SHEET_ID` | — | Optional per-product attributes sheet (Nutrition, Specs, Features, etc.) |
 | `NUXT_PUBLIC_WORKER_URL` | `MOCK` | Cloudflare Worker URL (`MOCK` = dev-only simulation) |
 | `NUXT_PUBLIC_TURNSTILE_SITE_KEY` | — | Cloudflare Turnstile site key |
 
