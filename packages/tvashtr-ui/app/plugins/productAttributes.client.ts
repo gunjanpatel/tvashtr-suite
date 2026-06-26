@@ -17,10 +17,7 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   const config = useRuntimeConfig()
   const sheetId: string = config.public.productAttributesSheetId ?? ''
 
-  console.log('[productAttributes] sheetId:', JSON.stringify(sheetId))
-
   if (!sheetId || sheetId === 'YOUR_SHEET_ID_HERE' || sheetId === 'MOCK') {
-    console.log('[productAttributes] bailing out — sheetId not configured')
     nuxtApp.provide('productAttributes', {})
     nuxtApp.provide('productAttributesError', null)
     return
@@ -29,8 +26,6 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   try {
     const repo = new GoogleSheetsProductAttributesRepository(sheetId)
     const attributes = await repo.getAll()
-
-    console.log('[productAttributes] fetched:', JSON.stringify(attributes))
 
     nuxtApp.provide('productAttributes', attributes)
     nuxtApp.provide('productAttributesError', null)

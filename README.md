@@ -167,6 +167,7 @@ Your store is running! Now follow the full deployment guide below to go live.
 | :--- | :--- | :--- | :--- |
 | `sku` | string | Unique product ID (no spaces) | `organic-wheat-1kg` |
 | `name` | string | Display name | `Organic Whole Wheat Flour` |
+| `categories` | string | Comma-separated list of category IDs | `baking,whole-wheat` |
 | `price` | number | Default price | `45` |
 | `image` | string | Image path from `/public` | `/images/wheat.webp` |
 | `short` | string | Short tagline | `Stone-ground, locally sourced` |
@@ -484,6 +485,7 @@ Toggle features by setting these in your `apps/my-store/.env`. No code changes n
 | `NUXT_PUBLIC_SHEET_ID` | *(required)* | Product catalogue Google Sheet ID |
 | `NUXT_PUBLIC_DELIVERY_SHEET_ID` | — | Delivery options Google Sheet ID |
 | `NUXT_PUBLIC_RECIPE_SHEET_ID` | — | Recipes Google Sheet ID |
+| `NUXT_PUBLIC_CATEGORY_SHEET_ID` | — | Categories Google Sheet ID |
 | `NUXT_PUBLIC_PRODUCT_ATTRIBUTES_SHEET_ID` | — | Optional per-product attributes sheet (Nutrition, Specs, Features, etc.) |
 | `NUXT_PUBLIC_WORKER_URL` | `MOCK` | Cloudflare Worker URL (`MOCK` = dev-only simulation) |
 | `NUXT_PUBLIC_TURNSTILE_SITE_KEY` | — | Cloudflare Turnstile site key |

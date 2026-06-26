@@ -26,8 +26,6 @@ export class GoogleSheetsProductAttributesRepository {
     }
 
     const { rows, headers } = await fetchGoogleSheetRowsWithHeaders(this.sheetId)
-    console.log('[productAttributes] headers:', headers)
-    console.log('[productAttributes] first row sku:', rows[0]?.$get('sku'))
 
     const attrHeaders = headers.filter((h) => h.toLowerCase() !== 'sku')
 
