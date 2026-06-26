@@ -24,6 +24,7 @@ export interface Product {
 export interface Category {
   slug: string
   name: string
+  type: string
   description: string
   active: boolean
 }

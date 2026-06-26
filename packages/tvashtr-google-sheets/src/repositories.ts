@@ -222,7 +222,8 @@ export class GoogleSheetsCategoryRepository implements CategoryRepository {
       try {
         const slug = row.$get('slug')
         const name = row.$get('name')
-        if (!slug || !name) return null
+        const type = row.$get('type')
+        if (!slug || !name || !type) return null
 
         const activeVal = row.$getRaw('active')
         const active = activeVal === true || String(activeVal).toUpperCase() === 'TRUE'
@@ -230,6 +231,7 @@ export class GoogleSheetsCategoryRepository implements CategoryRepository {
         return {
           slug,
           name,
+          type,
           description: row.$get('description') || '',
           active,
         } satisfies Category
