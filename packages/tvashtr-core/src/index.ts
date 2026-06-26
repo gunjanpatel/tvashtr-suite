@@ -18,6 +18,15 @@ export interface Product {
   qtyDefault: number
   active: boolean
   isPopular: boolean
+  categories: string[]   // category slugs, e.g. ['gluten-free', 'high-protein']
+}
+
+export interface Category {
+  slug: string
+  name: string
+  type: string
+  description: string
+  active: boolean
 }
 
 export interface RecipeProductRef {
@@ -76,4 +85,8 @@ export interface ProductRepository {
 
 export interface RecipeRepository {
   getAll(): Promise<Recipe[]>
+}
+
+export interface CategoryRepository {
+  getAll(): Promise<Category[]>
 }

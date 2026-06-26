@@ -126,4 +126,5 @@ The UI layer automatically boots plugins to hydrate store data from sheet endpoi
 1. **`products.client.ts`**: Populates products state in the application during early initialization.
 2. **`recipes.client.ts`**: Safely loads and parses sheet recipe lists.
 3. **`delivery.client.ts`**: Validates initial cookie states for addresses and postcodes.
-4. **`productAttributes.client.ts`**: Fetches the product attributes sheet if `NUXT_PUBLIC_PRODUCT_ATTRIBUTES_SHEET_ID` is configured. Silently provides an empty map if not — opt-in with zero noise for stores that don't use it.
+4. **`categories.client.ts`**: Fetches and parses store categories from the categories sheet.
+5. **`productAttributes.client.ts`**: Fetches the product attributes sheet if `NUXT_PUBLIC_PRODUCT_ATTRIBUTES_SHEET_ID` is configured. Silently provides an empty map if not — opt-in with zero noise for stores that don't use it.
