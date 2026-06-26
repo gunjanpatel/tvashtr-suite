@@ -236,6 +236,30 @@ A generic per-product data table. Patel Flour uses it for Nutrition Information.
 NUXT_PUBLIC_PRODUCT_ATTRIBUTES_SHEET_ID=your_sheet_id_here
 ```
 
+### Step 2c: Google Sheets — Product Categories Configuration
+
+Create a separate Google Sheet tab or file to manage your dynamic categories and automatic navigation row splits.
+
+**Sheet layout — Row 1 must be headers, freeze it via View → Freeze → 1 row:**
+
+| `category` | `name` | `type` | `description` |
+| --- | --- | --- | --- |
+| `daily-staples` | Daily Staples | usage | Essential everyday flours used for making standard rotis chapatis and flatbreads |
+| `gluten-free` | Gluten-Free | dietary | Naturally gluten-free flour options suitable for dietary restrictions |
+
+* **Column A (`category`)**: The unique text slug used in your product data mapping (e.g., `daily-staples`).
+* **Column B (`name`)**: The clean, customer-facing label displayed on the storefront filter pills.
+* **Column C (`type`)**: Must be either **`dietary`** or **`usage`**. This value automatically assigns the category to its respective layout row without changing backend code.
+* **Column D (`description`)**: Optional context describing the target category grouping.
+* Share the sheet as **Anyone with the link → Viewer**
+
+Add to `.env`:
+
+```env
+NUXT_PUBLIC_CATEGORIES_SHEET_ID=your_categories_sheet_id
+
+```
+
 **In your store's product page**, use the `useProductAttributes(sku)` composable and the generic `ProductAttributesTable` component from `@tvashtr/ui`, or create a store-specific styled component (e.g. `NutritionLabelA.vue`) that accepts the same props:
 
 ```vue
