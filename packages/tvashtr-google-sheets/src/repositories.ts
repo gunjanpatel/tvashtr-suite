@@ -1,4 +1,4 @@
-import type { ProductRepository, RecipeRepository, Product, Recipe } from '@tvashtr/core'
+import type { ProductRepository, RecipeRepository, CategoryRepository, Product, Recipe, Category } from '@tvashtr/core'
 import { fetchGoogleSheetRows, fetchGoogleSheetRowsWithHeaders } from './googleSheets'
 import { resolveOptimizedImage } from './imageResolver'
 
@@ -123,6 +123,11 @@ export class GoogleSheetsProductRepository implements ProductRepository {
 
         const originalImage = row.$get('image') || ''
 
+        const categoriesRaw = row.$get('categories')
+        const categories = categoriesRaw
+          ? categoriesRaw.split(',').map((c: string) => c.trim()).filter(Boolean)
+          : []
+
         return {
           sku,
           name,
@@ -135,6 +140,7 @@ export class GoogleSheetsProductRepository implements ProductRepository {
           qtyDefault: isNaN(qtyDefault) ? 1 : qtyDefault,
           active,
           isPopular,
+          categories,
         } satisfies Product
       } catch {
         return null
@@ -201,5 +207,37 @@ export class GoogleSheetsRecipeRepository implements RecipeRepository {
         return null
       }
     }).filter((r): r is Recipe => r !== null && r.active)
+  }
+}
+
+export class GoogleSheetsCategoryRepository implements CategoryRepository {
+  constructor(private sheetId: string) {}
+
+  async getAll(): Promise<Category[]> {
+    if (!this.sheetId || this.sheetId === 'YOUR_SHEET_ID_HERE' || this.sheetId === 'MOCK') {
+      return []
+    }
+
+    const rows = await fetchGoogleSheetRows(this.sheetId)
+
+    return rows.map((row) => {
+      try {
+        const slug = row.$get('slug')
+        const name = row.$get('name')
+        if (!slug || !name) return null
+
+        const activeVal = row.$getRaw('active')
+        const active = activeVal === true || String(activeVal).toUpperCase() === 'TRUE'
+
+        return {
+          slug,
+          name,
+          description: row.$get('description') || '',
+          active,
+        } satisfies Category
+      } catch {
+        return null
+      }
+    }).filter((c): c is Category => c !== null && c.active)
   }
 }

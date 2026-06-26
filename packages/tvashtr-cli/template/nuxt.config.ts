@@ -28,6 +28,7 @@ export default defineNuxtConfig({
       turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
       freeDeliveryThreshold: Number(process.env.NUXT_PUBLIC_FREE_DELIVERY_THRESHOLD) || 399,
       recipeSheetId: process.env.NUXT_PUBLIC_RECIPE_SHEET_ID || '',
+      categorySheetId: process.env.NUXT_PUBLIC_CATEGORY_SHEET_ID || '',
       allowedCountry: process.env.NUXT_PUBLIC_ALLOWED_COUNTRY || 'DK',
     },
   },

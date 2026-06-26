@@ -9,4 +9,4 @@ export type { GoogleSheetRow, GoogleSheetTable } from './googleSheets'
 
 export { fetchImageManifest, resolveOptimizedImage } from './imageResolver'
 
-export { GoogleSheetsProductRepository, GoogleSheetsRecipeRepository, GoogleSheetsProductAttributesRepository } from './repositories'
+export { GoogleSheetsProductRepository, GoogleSheetsRecipeRepository, GoogleSheetsProductAttributesRepository, GoogleSheetsCategoryRepository } from './repositories'
