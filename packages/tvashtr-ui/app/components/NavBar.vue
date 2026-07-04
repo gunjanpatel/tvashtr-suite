@@ -14,7 +14,39 @@
     class="sticky top-0 z-40 backdrop-blur-md border-b transition-colors duration-200"
     style="background-color: color-mix(in srgb, var(--bg-page) 90%, transparent); border-color: var(--border)"
   >
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+    <!-- Mobile Search Bar -->
+    <div
+      v-if="mobileSearchOpen"
+      class="md:hidden max-w-6xl mx-auto px-4 flex items-center justify-between h-16 gap-3"
+    >
+      <div class="relative flex-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style="color: var(--text-secondary)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0Z" />
+        </svg>
+        <input
+          ref="mobileSearchInput"
+          v-model="searchQuery"
+          type="search"
+          :placeholder="$t('common.searchPlaceholder') || 'Search products...'"
+          class="w-full pl-9 pr-4 py-1.5 rounded-full text-sm border outline-none transition-colors"
+          style="background-color: var(--bg-surface); color: var(--text-primary); border-color: var(--border)"
+          @keydown.enter="triggerSearch"
+        />
+      </div>
+      <button
+        class="text-sm font-medium transition-colors hover:text-brand-500 flex-shrink-0 px-2 py-1"
+        style="color: var(--text-secondary)"
+        @click="mobileSearchOpen = false"
+      >
+        Cancel
+      </button>
+    </div>
+
+    <!-- Regular Navbar Content -->
+    <div
+      v-else
+      class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16"
+    >
       <!-- Logo -->
       <NuxtLink :to="localePath('/')" class="flex items-center gap-2 group">
         <span class="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0">
@@ -37,11 +69,40 @@
         </NuxtLink>
       </div>
 
+      <!-- Desktop search -->
+      <div class="hidden md:flex items-center flex-1 max-w-[180px] lg:max-w-[240px] mx-4">
+        <div class="relative w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style="color: var(--text-secondary)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0Z" />
+          </svg>
+          <input
+            v-model="searchQuery"
+            type="search"
+            :placeholder="$t('common.searchPlaceholder') || 'Search products...'"
+            class="w-full pl-9 pr-4 py-1.5 rounded-full text-xs border outline-none transition-colors"
+            style="background-color: var(--bg-surface); color: var(--text-primary); border-color: var(--border)"
+            @keydown.enter="triggerSearch"
+          />
+        </div>
+      </div>
+
       <!-- Right side: lang toggle + theme toggle + cart + hamburger -->
       <div class="flex items-center gap-1">
 
+        <!-- Mobile Search Toggle -->
+        <button
+          class="md:hidden p-2 rounded-full transition-colors"
+          :style="`color: var(--text-secondary)`"
+          aria-label="Search"
+          @click="mobileSearchOpen = true; menuOpen = false"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0Z" />
+          </svg>
+        </button>
+
         <!-- Language Dropdown -->
-        <UPopover :popper="{ placement: 'bottom-end' }">
+        <UPopover :popper="{ placement: 'bottom-end' }" class="hidden">
           <button
             class="p-2 text-sm font-medium uppercase rounded-full transition-colors flex items-center gap-1.5"
             :style="`color: var(--text-secondary)`"
@@ -147,9 +208,38 @@ const { count } = useCart()
 const cartOpen = useState('cart-open', () => false)
 const { isAllowed } = useGeoRestriction()
 const menuOpen = ref(false)
+const mobileSearchOpen = ref(false)
+const mobileSearchInput = ref<HTMLInputElement | null>(null)
+
+watch(mobileSearchOpen, async (val) => {
+  if (val) {
+    await nextTick()
+    mobileSearchInput.value?.focus()
+  }
+})
 
 const { locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
+const searchQuery = useState('search-query', () => '')
+const route = useRoute()
+const router = useRouter()
+
+function triggerSearch() {
+  menuOpen.value = false
+  mobileSearchOpen.value = false
+  router.push(localePath({ path: '/products', query: { q: searchQuery.value || undefined } }))
+}
+
+watch(() => route.query.q, (newQ) => {
+  searchQuery.value = (newQ as string) || ''
+}, { immediate: true })
+
+watch(searchQuery, (newVal) => {
+  const productsPath = localePath('/products')
+  if (route.path !== productsPath && newVal.trim()) {
+    router.push(localePath({ path: '/products', query: { ...route.query, q: newVal } }))
+  }
+})
 
 function changeLanguage(code: string) {
   setLocale(code)
