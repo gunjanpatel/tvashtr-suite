@@ -40,6 +40,7 @@ Follow SOLID, always when possible.
 Follow DRY, always when possible.
 
 - **Plugin logic is centralised in `createSheetPlugin()`.** This factory in `@tvashtr/ui/app/utils/createSheetPlugin.ts` owns the full lifecycle: sheetId guard, image manifest fetch, `getAll()`, `provide()`, error key, logging. Do not inline this logic in individual plugins.
+- **Search and filter logic is centralised in `useProductFilters()`.** This composable in `@tvashtr/ui/app/composables/useProductFilters.ts` owns search state, category filter state, URL query-param syncing, and computed filtered results. Do not re-implement any of this logic in tenant pages — call the composable.
 - **Shared parsing patterns** — use these exact forms, never ad-hoc variations:
   - CSV columns: `raw.split(',').map(s => s.trim()).filter(Boolean)`
   - Boolean sheet cells: `val === true || String(val).toUpperCase() === 'TRUE'`
@@ -71,7 +72,9 @@ Follow DRY, always when possible.
 - **Colors via CSS custom properties only.** Never hardcode hex in components. Use `var(--text-primary)`, `var(--bg-surface)`, `var(--border)`, `var(--color-brand-500)` etc.
 - **Tailwind for spacing and layout. CSS vars for color and theme tokens.**
 - **`scrollbar-hide` + right-edge CSS fade** for any horizontal scroll container.
-- **URL state** for any filterable or paginated list — `useRoute` / `router.replace`.
+- **URL state** for any filterable or paginated list — `useRoute` / `router.replace`. Prefer `useProductFilters()` over manual query-param management for product pages.
+- **Global search state** is shared via `useState('search-query')`. NavBar writes it; `useProductFilters` reads and syncs it with `?q=`. Never create a separate search state in a page.
+- **Mobile search** is exposed directly in the topbar via a magnifying-glass icon toggle, not inside the hamburger menu.
 - **Empty states must offer a recovery action** — never just a message.
 - **Transitions** use the existing `btn-swap` pattern (`out-in`, 150ms) for in-place state changes.
 
@@ -99,3 +102,4 @@ Column headers are normalised to lowercase with underscores stripped before look
 - No hardcoded colors in Vue components.
 - No `any` outside of gviz API bridge code. If used, add an inline comment explaining why.
 - No code before schema and UX are agreed.
+- No manual search or filter state in tenant pages — use `useProductFilters(products, categories)` and destructure what you need.

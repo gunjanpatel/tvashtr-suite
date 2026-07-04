@@ -40,7 +40,7 @@ export default defineNuxtConfig({
 All UI components are built using **Nuxt UI** and **TailwindCSS v4**, utilizing dynamic brand parameters specified inside each tenant store's `store.config.ts`.
 
 ### 🛒 Cart & Navigation
-- **`NavBar.vue`**: Elegant, responsive navigation bar supporting custom logos, category listings, and a dynamic cart badge.
+- **`NavBar.vue`**: Elegant, responsive navigation bar supporting custom logos, category listings, a dynamic cart badge, and a global product search. On desktop the search input is embedded inline. On mobile, a magnifying glass icon in the topbar opens a full-width, auto-focused search overlay without requiring the hamburger menu.
 - **`CartDrawer.vue`**: Flyout side panel showing items in the cart, item quantities, variant options, shipping thresholds, and the checkout form with Turnstile forms embedded.
 - **`FooterBar.vue`**: Clean, modular footer containing brand links, support contacts, and license labels.
 
@@ -63,6 +63,26 @@ All UI components are built using **Nuxt UI** and **TailwindCSS v4**, utilizing 
 ## 🧪 Reactive Composables
 
 The package exports robust state engines to drive client-side actions:
+
+### 🔍 `useProductFilters(products, categories)`
+A unified composable that manages both product search and category filtering with automatic, bidirectional URL query-parameter syncing. Drop it into any products page for instant search + filter functionality:
+```typescript
+const {
+  // State
+  activeFilters,        // Set<string> of active category slugs
+  dietaryCategories,    // Computed — categories where type === 'dietary'
+  usageCategories,      // Computed — categories where type === 'usage'
+  filteredProducts,     // Computed — products after search + category filters applied
+
+  // Actions
+  toggleFilter,         // Toggle a category slug on/off
+  clearFilters,         // Clear all active category filters
+  isRowClear,           // Check if an entire filter row (dietary/usage) is inactive
+  clearRowFilters,      // Clear all filters in a row
+  countForCategory,     // Count products matching a given category slug
+} = useProductFilters(products, categories)
+```
+URL sync is automatic — `?q=` for search, `?categories=` for filters — both are read on mount and kept in sync on every change.
 
 ### 🛍️ `useCart()`
 Handles reactive shopping cart state, syncing choices to LocalStorage or client Cookies:
