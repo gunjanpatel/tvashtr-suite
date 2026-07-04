@@ -99,7 +99,8 @@ export function useProductFilters(products: Ref<Product[]>, categories: Ref<Cate
       result = result.filter(p =>
         p.name.toLowerCase().includes(q) ||
         p.sku.toLowerCase().includes(q) ||
-        p.short?.toLowerCase().includes(q)
+        p.short?.toLowerCase().includes(q) ||
+        p.desc?.toLowerCase().includes(q)
       )
     }
 
