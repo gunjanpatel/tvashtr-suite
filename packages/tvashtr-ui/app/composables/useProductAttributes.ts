@@ -16,7 +16,13 @@ export function useProductAttributes(sku?: Ref<string> | string) {
   const nuxtApp = useNuxtApp()
 
   const allAttributes = computed<Record<string, Record<string, string>>>(
-    () => (nuxtApp.$productAttributes as Record<string, Record<string, string>>) ?? {}
+    () => {
+      const raw = nuxtApp.$productAttributes
+      // createSheetPlugin now provides a ShallowRef — unwrap if needed
+      return (raw && typeof raw === 'object' && 'value' in (raw as object)
+        ? (raw as any).value
+        : raw) as Record<string, Record<string, string>> ?? {}
+    }
   )
 
   const attributes = computed<Record<string, string>>(() => {
