@@ -115,6 +115,10 @@ export function useProductFilters(products: Ref<Product[]>, categories: Ref<Cate
     return result
   })
 
+  const productsReady = useState<boolean>('products:ready', () => false)
+  const categoriesReady = useState<boolean>('categories:ready', () => false)
+  const isReady = computed(() => productsReady.value && categoriesReady.value)
+
   return {
     searchQuery,
     activeFilters,
@@ -125,6 +129,7 @@ export function useProductFilters(products: Ref<Product[]>, categories: Ref<Cate
     isRowClear,
     clearRowFilters,
     countForCategory,
-    filteredProducts
+    filteredProducts,
+    isReady
   }
 }

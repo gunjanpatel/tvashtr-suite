@@ -29,28 +29,43 @@ export function createSheetPlugin<T>(options: SheetPluginOptions<T>) {
     warnIfMissing = false,
   } = options
 
-  return defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
+  return defineNuxtPlugin((nuxtApp: NuxtApp) => {
     const config = useRuntimeConfig()
     const sheetId: string = (config.public as any)[configKey] ?? ''
+
+    // ── useState as reactive backing store ─────────────────────────────────
+    // useState is shared across plugins and components by key — guaranteed
+    // reactive in Nuxt. Setting .value in the IIFE will trigger re-renders.
+    const dataState = useState<T>(provideKey, () => emptyValue)
+    const isReady = useState<boolean>(`${provideKey}:ready`, () => false)
+    const errorState = useState<string | null>(
+      errorKey ?? `${provideKey}:error`, () => null
+    )
+
+    // Provide refs for any code that accesses via nuxtApp.$xxx
+    nuxtApp.provide(provideKey, dataState)
+    if (errorKey) nuxtApp.provide(errorKey, errorState)
 
     if (!sheetId || sheetId === 'YOUR_SHEET_ID_HERE' || sheetId === 'MOCK') {
       const log = warnIfMissing ? console.warn : console.error
       log(`[${provideKey}] ${configKey} is not configured — skipping fetch.`)
-      nuxtApp.provide(provideKey, emptyValue)
-      if (errorKey) nuxtApp.provide(errorKey, 'SHEET_ID_MISSING')
+      if (errorKey) errorState.value = 'SHEET_ID_MISSING'
+      isReady.value = true
       return
     }
 
-    try {
-      const optimizedImages = needsImages ? await fetchImageManifest() : undefined
-      const repo = makeRepo(sheetId, optimizedImages)
-      const data = await repo.getAll()
-      nuxtApp.provide(provideKey, data)
-      if (errorKey) nuxtApp.provide(errorKey, null)
-    } catch (e: any) {
-      console.error(`[${provideKey}] Failed to fetch: ${e?.message ?? e}`)
-      nuxtApp.provide(provideKey, emptyValue)
-      if (errorKey) nuxtApp.provide(errorKey, 'FETCH_FAILED')
-    }
+    // ── Fire fetch in the background — do not await ────────────────────────
+    ;(async () => {
+      try {
+        const optimizedImages = needsImages ? await fetchImageManifest() : undefined
+        const repo = makeRepo(sheetId, optimizedImages)
+        dataState.value = await repo.getAll()
+      } catch (e: any) {
+        console.error(`[${provideKey}] Failed to fetch: ${e?.message ?? e}`)
+        if (errorKey) errorState.value = 'FETCH_FAILED'
+      } finally {
+        isReady.value = true
+      }
+    })()
   })
 }
