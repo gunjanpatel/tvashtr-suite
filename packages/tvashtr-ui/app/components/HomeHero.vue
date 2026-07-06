@@ -41,6 +41,7 @@
           :src="image"
           :alt="title"
           class="absolute inset-0 w-full h-full object-cover rounded-3xl"
+          fetchpriority="high"
         />
         <!-- Floating card -->
         <div
