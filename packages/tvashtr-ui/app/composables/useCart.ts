@@ -101,7 +101,13 @@ function persistCart() {
 
 export function useCart() {
   const { products } = useProducts()
-  hydrateCart(products.value)
+
+  // Hydrate reactively: the first time products become non-empty we restore
+  // the cart from localStorage. This handles full-page reloads where products
+  // may not be available yet when useCart() is first called.
+  watchEffect(() => {
+    hydrateCart(products.value)
+  })
 
   const count = computed(() => sanitize(cart.value).reduce((sum, i) => sum + i.qty, 0))
   const total = computed(() =>
