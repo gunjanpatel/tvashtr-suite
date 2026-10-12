@@ -47,6 +47,37 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
       return cells[i]?.v ?? undefined
     }
 
+    const parseDate = (cells: any[], key: string): Date | null => {
+      const i = colIndex[key]
+      if (i === undefined) return null
+      const cell = cells[i]
+      if (!cell || cell.v === null || cell.v === undefined) return null
+
+      // If cell has a formatted string (cell.f), try parsing that first (e.g. "2026-10-11" or "11/10/2026")
+      if (cell.f && typeof cell.f === 'string') {
+        const d = new Date(cell.f)
+        if (!isNaN(d.getTime())) return d
+      }
+
+      const val = String(cell.v).trim()
+
+      // Handle Google Sheets gviz format: "Date(YYYY,M,D)" or "Date(YYYY,M,D,H,M,S)"
+      // Note: In Google Sheets gviz, month is 0-indexed (0 = Jan, 9 = Oct)
+      const match = val.match(/^Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)$/)
+      if (match) {
+        const year = parseInt(match[1], 10)
+        const month = parseInt(match[2], 10) // 0-indexed
+        const day = parseInt(match[3], 10)
+        const hours = match[4] ? parseInt(match[4], 10) : 0
+        const minutes = match[5] ? parseInt(match[5], 10) : 0
+        const seconds = match[6] ? parseInt(match[6], 10) : 0
+        return new Date(year, month, day, hours, minutes, seconds)
+      }
+
+      const parsed = new Date(val)
+      return isNaN(parsed.getTime()) ? null : parsed
+    }
+
     const options: DeliveryOption[] = (table.rows as any[])
       .map((row: any, idx: number) => {
         try {
@@ -65,6 +96,25 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
           const price = typeof priceRaw === 'number' ? priceRaw : parseFloat(String(priceRaw ?? '0'))
           if (isNaN(price)) return null
 
+          const startDate = parseDate(cells, 'start_date') || parseDate(cells, 'startdate')
+          const endDate = parseDate(cells, 'end_date') || parseDate(cells, 'enddate')
+
+          const now = new Date()
+
+          if (startDate && now < startDate) {
+            return null
+          }
+
+          if (endDate) {
+            // End of day (23:59:59.999) if no specific time was provided
+            if (endDate.getHours() === 0 && endDate.getMinutes() === 0 && endDate.getSeconds() === 0) {
+              endDate.setHours(23, 59, 59, 999)
+            }
+            if (now > endDate) {
+              return null
+            }
+          }
+
           const key = get(cells, 'key') || `delivery-${idx}`
 
           return {
@@ -75,7 +125,9 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
             price,
             time: get(cells, 'time'),
             freeAboveThreshold: getRaw(cells, 'free_above_threshold') ?? false,
-            alwaysShow: getRaw(cells, 'always_show') ?? false
+            alwaysShow: getRaw(cells, 'always_show') ?? false,
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
           } satisfies DeliveryOption
         } catch {
           return null
