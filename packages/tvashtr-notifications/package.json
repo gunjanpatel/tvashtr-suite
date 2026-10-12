@@ -1,7 +1,7 @@
 {
   "name": "@tvashtr/notifications",
-  "version": "1.0.1",
-  "type": "module",  
+  "version": "1.0.2",
+  "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "publishConfig": {
