@@ -38,6 +38,7 @@ export async function sendBrevoEmail(
     body: JSON.stringify({
       sender: { email: config.senderEmail, name: config.senderName },
       to: payload.to,
+      bcc: [{ email: config.senderEmail, name: config.senderName }],
       subject: payload.subject,
       htmlContent: payload.htmlContent,
       textContent: payload.textContent,
