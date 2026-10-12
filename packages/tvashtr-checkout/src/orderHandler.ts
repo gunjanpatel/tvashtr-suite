@@ -22,6 +22,8 @@ export interface DeliveryOption {
   time: string
   freeAboveThreshold: boolean
   alwaysShow: boolean
+  startDate?: string
+  endDate?: string
 }
 
 export interface DeliveryAddress {

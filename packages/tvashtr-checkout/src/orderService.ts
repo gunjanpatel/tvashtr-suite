@@ -4,6 +4,7 @@ import { generateId, validate as defaultValidate } from './orderHandler'
 import {
   notifyOwnerViaTelegram,
   notifyCustomerViaEmail,
+  notifyOwnerViaEmail,
   type TelegramConfig,
   type BrevoConfig,
   type BrandConfig,
@@ -52,7 +53,14 @@ export class OrderService {
     )
 
     const notificationPayload = { orderId, payload: payload as OrderPayload }
-    await Promise.allSettled(this.notifiers.map((n) => n.notify(notificationPayload)))
+    await Promise.allSettled(this.notifiers.map(async (n) => {
+      try{
+        console.info(`[tvashtr-checkout] Notifying via ${n.constructor.name}`)
+        await n.notify(notificationPayload)
+      }catch(e){
+        console.error(`[tvashtr-checkout] Error notifying via ${n.constructor.name}`, e)
+      }
+    }))
 
     return { orderId, total }
   }
@@ -71,3 +79,16 @@ export class BrevoOrderNotifier implements Notifier<{ orderId: string; payload: 
     await notifyCustomerViaEmail(this.config, data.orderId, data.payload, this.brand)
   }
 }
+
+export class BrevoOwnerOrderNotifier implements Notifier<{ orderId: string; payload: OrderPayload }> {
+  constructor(
+    private config: BrevoConfig,
+    private ownerEmail: string,
+    private brand: BrandConfig
+  ) {}
+  async notify(data: { orderId: string; payload: OrderPayload }): Promise<void> {
+    if (!this.ownerEmail) return
+    await notifyOwnerViaEmail(this.config, this.ownerEmail, data.orderId, data.payload, this.brand)
+  }
+}
+

@@ -1,12 +1,44 @@
-import type { OrderPayload } from './orderHandler'
+export interface OrderItem {
+  sku: string
+  name: string
+  variant?: string
+  qty: number
+  price: number
+}
+
+export interface DeliveryOption {
+  title: string
+  price: number
+  time?: string
+}
+
+export interface DeliveryAddress {
+  street: string
+  city: string
+  postcode: string
+}
+
+export interface OrderPayload {
+  name: string
+  email: string
+  phone: string
+  address: DeliveryAddress
+  delivery: DeliveryOption
+  items: OrderItem[]
+  total: number
+  payment_method?: string
+}
+
 import { sendTelegramMessage, type TelegramConfig } from './telegram'
 import { sendBrevoEmail, type BrevoConfig } from './brevo'
-import { buildOrderConfirmationEmail, type BrandConfig } from './emailTemplates'
+import {
+  buildOrderConfirmationEmail,
+  buildOwnerOrderNotificationEmail,
+  type BrandConfig,
+} from './emailTemplates'
 
 export type { TelegramConfig, BrevoConfig, BrandConfig }
 
-// Re-export OrderPayload so emailTemplates can import it
-export type { OrderPayload }
 
 export async function notifyOwnerViaTelegram(
   config: TelegramConfig,
@@ -60,3 +92,24 @@ export async function notifyCustomerViaEmail(
     textContent,
   })
 }
+
+export async function notifyOwnerViaEmail(
+  config: BrevoConfig,
+  ownerEmail: string,
+  orderId: string,
+  payload: OrderPayload,
+  brand: BrandConfig
+): Promise<void> {
+  if (!ownerEmail) return
+
+  const { subject, htmlContent, textContent } = buildOwnerOrderNotificationEmail(orderId, payload, brand)
+
+  await sendBrevoEmail(config, {
+    to: [{ email: ownerEmail, name: brand.name }],
+    subject,
+    htmlContent,
+    textContent,
+    replyTo: { email: payload.email, name: payload.name },
+  })
+}
+
