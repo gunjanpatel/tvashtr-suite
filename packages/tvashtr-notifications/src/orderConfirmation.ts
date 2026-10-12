@@ -55,6 +55,7 @@ export async function notifyCustomerViaEmail(
 
   await sendBrevoEmail(config, {
     to: [{ email: payload.email, name: payload.name }],
+    bccSender: true,
     subject,
     htmlContent,
     textContent,

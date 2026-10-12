@@ -15,6 +15,7 @@ export interface BrevoRecipient {
 
 export interface BrevoEmailPayload {
   to: BrevoRecipient[]
+  bccSender?: boolean
   subject: string
   htmlContent: string
   textContent?: string
@@ -38,7 +39,7 @@ export async function sendBrevoEmail(
     body: JSON.stringify({
       sender: { email: config.senderEmail, name: config.senderName },
       to: payload.to,
-      bcc: [{ email: config.senderEmail, name: config.senderName }],
+      bcc: payload.bccSender ? [{ email: config.senderEmail, name: config.senderName }] : [],
       subject: payload.subject,
       htmlContent: payload.htmlContent,
       textContent: payload.textContent,
