@@ -4,6 +4,7 @@ import { generateId, validate as defaultValidate } from './orderHandler'
 import {
   notifyOwnerViaTelegram,
   notifyCustomerViaEmail,
+  notifyOwnerViaEmail,
   type TelegramConfig,
   type BrevoConfig,
   type BrandConfig,
@@ -71,3 +72,16 @@ export class BrevoOrderNotifier implements Notifier<{ orderId: string; payload: 
     await notifyCustomerViaEmail(this.config, data.orderId, data.payload, this.brand)
   }
 }
+
+export class BrevoOwnerOrderNotifier implements Notifier<{ orderId: string; payload: OrderPayload }> {
+  constructor(
+    private config: BrevoConfig,
+    private ownerEmail: string,
+    private brand: BrandConfig
+  ) {}
+  async notify(data: { orderId: string; payload: OrderPayload }): Promise<void> {
+    if (!this.ownerEmail) return
+    await notifyOwnerViaEmail(this.config, this.ownerEmail, data.orderId, data.payload, this.brand)
+  }
+}
+

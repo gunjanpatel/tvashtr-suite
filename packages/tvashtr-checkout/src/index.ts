@@ -22,6 +22,12 @@ export type {
   OrderDb,
 } from './orderHandler'
 
-export { OrderService, TelegramOrderNotifier, BrevoOrderNotifier } from './orderService'
+export {
+  OrderService,
+  TelegramOrderNotifier,
+  BrevoOrderNotifier,
+  BrevoOwnerOrderNotifier,
+} from './orderService'
 
 export { EnquiryService, BrevoEnquiryNotifier, processEnquiry } from './enquiryHandler'
+
